@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,6 +44,15 @@ public class DiscountEditorController extends HttpServlet {
 					request.setAttribute("message", "Code " + code + " Ajouté");
 					request.setAttribute("codes", dao.allCodes());								
 					break;
+                                case "UPDATE": //Mise à jour du taux
+                                    try {
+                                            dao.majDiscountCode(code, Float.valueOf(taux));
+                                            request.setAttribute("message", "Code " + code + " Mis à jour : " + taux);
+                                            request.setAttribute("codes", dao.allCodes());								
+                                    } catch (SQLException e) {
+                                            request.setAttribute("message", "Impossible de mettre à jour le taux " +taux +" du code " + code );
+                                    }
+                                    break;
 				case "DELETE": // Requête de suppression (vient du lien hypertexte)
 					try {
 						dao.deleteDiscountCode(code);
@@ -56,9 +66,13 @@ public class DiscountEditorController extends HttpServlet {
 		} catch (Exception ex) {
 			Logger.getLogger("discountEditor").log(Level.SEVERE, "Action en erreur", ex);
 			request.setAttribute("message", ex.getMessage());
+                        
+                        
 		} finally {
 
 		}
+                
+                
 		// On continue vers la page JSP sélectionnée
 		request.getRequestDispatcher("ajoutDiscount.jsp").forward(request, response);
 	}
