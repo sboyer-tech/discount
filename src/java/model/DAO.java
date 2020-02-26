@@ -89,8 +89,10 @@ public class DAO {
 		String sql = "UPDATE DISCOUNT_CODE SET RATE = ? WHERE DISCOUNT_CODE = ?";
 		try (Connection connection = myDataSource.getConnection(); 
 		     PreparedStatement stmt = connection.prepareStatement(sql)) {
-			stmt.setFloat(1, taux); //premier ?
-                        stmt.setString(2, code); //deuxième ?
+                        //Le 1er
+			stmt.setFloat(1, taux);
+                        //Le 2eme
+                        stmt.setString(2, code); 
 			result = stmt.executeUpdate();
 		}
 		return result;
